@@ -1,11 +1,11 @@
 ---
-import LogoMark from "./LogoMark.astro";
+import Logo from "./Logo.astro";
 import { kern } from "../lib/typography";
 ---
 
 <section class="philosophy" aria-labelledby="philosophy-title">
   <div class="container inner">
-    <LogoMark class="mark" />
+    <Logo variant="icon" tone="reverse" class="mark" />
     <div class="copy">
       <h2 id="philosophy-title">
         <Fragment set:html={kern("You don't automate the people who hold your operation together.")} />{" "}
@@ -39,10 +39,6 @@ import { kern } from "../lib/typography";
     width: clamp(64px, 8vw, 96px);
     height: auto;
     margin-top: 6px;
-  }
-
-  .inner :global(.mark) {
-    --mark-house: #fff;
   }
 
   .copy {

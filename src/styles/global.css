@@ -9,14 +9,14 @@
    */
   color-scheme: light dark;
 
-  /* Brand greens, sampled from the logo. Fixed in both themes. */
-  --green-950: #062a18;
-  --green-900: #0b4d2c;
-  --green-800: #0a3f25;
-  --green-600: #00904b;
-  --green-400: #5bc682;
-  --green-100: #dff3e6;
-  --green-50: #f1f9f4;
+  /* Brand greens from the approved logo (forest, roof, mint). Fixed in both themes. */
+  --green-950: #032a1e;
+  --green-900: #064b36;
+  --green-800: #053d2c;
+  --green-600: #009b63;
+  --green-400: #55d99c;
+  --green-100: #dcf3e8;
+  --green-50: #f0f9f5;
 
   /* Surfaces */
   --paper: light-dark(#ffffff, #08120d);
@@ -30,7 +30,7 @@
   --header-bg: light-dark(rgb(255 255 255 / 0.92), rgb(8 18 13 / 0.92));
 
   /* Brand panels keep the deep green in both themes, with white text on top. */
-  --panel: light-dark(var(--green-900), #0b3b23);
+  --panel: light-dark(var(--green-900), #073a2b);
   --panel-deep: light-dark(var(--green-950), #04160c);
 
   /* Text */
@@ -39,20 +39,21 @@
   --ink-soft: light-dark(#5b6f64, #879a8f);
   --heading: light-dark(var(--green-900), #eef7f1);
   --accent: light-dark(var(--green-600), var(--green-400));
-  --accent-text: light-dark(#007a3d, #6fd293);
+  --accent-text: light-dark(#007a4e, #6fe0ad);
   --icon: light-dark(var(--green-900), #a5dfba);
   --danger: light-dark(#b42318, #ff8a7d);
 
   /* Solid fills: primary buttons, selected chips, check marks. */
   --solid: light-dark(var(--green-900), var(--green-400));
-  --solid-hover: light-dark(var(--green-800), #74d396);
+  --solid-hover: light-dark(var(--green-800), #72e2ae);
   --on-solid: light-dark(#ffffff, #05200f);
 
-  /* The logo's house body turns light so it stays visible on dark backgrounds. */
-  --mark-house: light-dark(var(--green-900), #eef7f1);
+  /* Logo colors: the color treatment in light mode, the reverse in dark mode. */
+  --logo-ink: light-dark(var(--green-900), #ffffff);
+  --logo-roof: light-dark(var(--green-600), var(--green-400));
 
-  --band-1: light-dark(var(--green-100), rgb(91 198 130 / 0.09));
-  --band-2: light-dark(var(--green-50), rgb(91 198 130 / 0.045));
+  /* The hero's oversized roof line, echoing the logo. */
+  --hero-roof: light-dark(var(--green-100), rgb(85 217 156 / 0.08));
 
   /* Display face matches the logo wordmark; Inter carries running text for legibility. */
   --font-display: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -61,9 +62,9 @@
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 24px;
-  --shadow-tint: light-dark(rgb(11 77 44 / 0.06), rgb(0 0 0 / 0.3));
-  --shadow-color: light-dark(rgb(11 77 44 / 0.12), rgb(0 0 0 / 0.45));
-  --shadow-strong: light-dark(rgb(11 77 44 / 0.22), rgb(0 0 0 / 0.6));
+  --shadow-tint: light-dark(rgb(6 75 54 / 0.06), rgb(0 0 0 / 0.3));
+  --shadow-color: light-dark(rgb(6 75 54 / 0.12), rgb(0 0 0 / 0.45));
+  --shadow-strong: light-dark(rgb(6 75 54 / 0.22), rgb(0 0 0 / 0.6));
   --shadow-card: 0 1px 2px var(--shadow-tint), 0 8px 24px -8px var(--shadow-color);
   --shadow-lift: 0 2px 4px var(--shadow-tint), 0 24px 48px -16px var(--shadow-strong);
 

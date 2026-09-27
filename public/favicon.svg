@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 10 380 444">
-  <style>@media (prefers-color-scheme: dark) { .house { fill: #eef7f1 } }</style>
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="37">
-    <path d="M30 144.75 200 30l170 114.75" stroke="#5BC682"/>
-    <path d="M30 182.75 200 68l170 114.75" stroke="#00904B"/>
-  </g>
-  <path d="M40 211 200 103l160 108v242H245v-132a32 32 0 0 0-32-32h-24a32 32 0 0 0-32 32v132H40Z" class="house" fill="#0B4D2C"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .ink { fill: #064b36 }
+    .roof { stroke: #009b63 }
+    @media (prefers-color-scheme: dark) {
+      .ink { fill: #ffffff }
+      .roof { stroke: #55d99c }
+    }
+  </style>
+  <path class="ink" d="M10 49 L50 20 L90 49 L90 100 L61 100 L61 77 C61 62 39 62 39 77 L39 100 L10 100 Z"/>
+  <path class="roof" d="M6 38 L50 6 L94 38" fill="none" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
 </svg>

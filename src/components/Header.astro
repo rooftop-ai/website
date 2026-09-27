@@ -1,13 +1,12 @@
 ---
-import LogoMark from "./LogoMark.astro";
+import Logo from "./Logo.astro";
 import { nav, site } from "../config/site";
 ---
 
 <header class="site-header" data-header>
   <div class="container bar">
     <a class="brand" href="#top" aria-label={`${site.name} home`}>
-      <LogoMark class="brand-mark" />
-      <span class="brand-name">Rooftop Labs</span>
+      <Logo class="brand-logo" />
     </a>
     <nav class="nav" aria-label="Primary">
       <ul>
@@ -89,24 +88,13 @@ import { nav, site } from "../config/site";
 
   .brand {
     display: inline-flex;
-    align-items: center;
-    gap: 11px;
+    flex: none;
     margin-right: auto;
-    text-decoration: none;
   }
 
-  .brand :global(.brand-mark) {
-    width: 32px;
-    height: auto;
-  }
-
-  .brand-name {
-    color: var(--heading);
-    font-family: var(--font-display);
-    font-size: 21px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    white-space: nowrap;
+  .brand :global(.brand-logo) {
+    width: auto;
+    height: 34px;
   }
 
   .nav ul {
@@ -189,12 +177,8 @@ import { nav, site } from "../config/site";
       gap: 12px;
     }
 
-    .brand :global(.brand-mark) {
-      width: 28px;
-    }
-
-    .brand-name {
-      font-size: 19px;
+    .brand :global(.brand-logo) {
+      height: 28px;
     }
 
     .button-small {
