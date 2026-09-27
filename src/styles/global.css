@@ -1,0 +1,228 @@
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/inter";
+
+:root {
+  color-scheme: light;
+
+  /* Brand greens, sampled from the logo. */
+  --green-900: #0b4d2c;
+  --green-800: #0a3f25;
+  --green-950: #062a18;
+  --green-600: #00904b;
+  --green-400: #5bc682;
+  --green-100: #dff3e6;
+  --green-50: #f1f9f4;
+
+  --ink: #10261a;
+  --ink-muted: #2c3f35;
+  --ink-soft: #5b6f64;
+  --paper: #ffffff;
+  --paper-tint: #f6faf7;
+  --line: #dde9e1;
+  --line-strong: #c6d8cc;
+  --danger: #b42318;
+
+  /* Display face matches the logo wordmark; Inter carries running text for legibility. */
+  --font-display: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-card: 0 1px 2px rgb(11 77 44 / 0.06), 0 8px 24px -8px rgb(11 77 44 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(11 77 44 / 0.06), 0 24px 48px -16px rgb(11 77 44 / 0.22);
+
+  --container: 1160px;
+  --gutter: clamp(20px, 5vw, 40px);
+  --section-y: clamp(80px, 11vw, 136px);
+  --header-h: 72px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  color: var(--green-900);
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid var(--green-400);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--green-100);
+  color: var(--green-950);
+}
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.eyebrow {
+  color: var(--green-600);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.section-head {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+  margin-bottom: clamp(40px, 6vw, 64px);
+}
+
+.section-head h2 {
+  font-size: clamp(32px, 4.4vw, 48px);
+}
+
+.section-lede {
+  display: grid;
+  gap: 16px;
+  color: var(--ink-muted);
+  font-size: clamp(17px, 1.6vw, 19px);
+}
+
+/* Optical kerning for display punctuation; see src/lib/typography.ts. */
+.punct {
+  margin-left: -0.07em;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.button-primary {
+  background: var(--green-900);
+  color: #fff;
+  box-shadow: 0 6px 18px -6px rgb(11 77 44 / 0.55);
+}
+
+.button-primary:hover {
+  background: var(--green-800);
+  transform: translateY(-1px);
+}
+
+.button-secondary {
+  border-color: var(--line-strong);
+  background: #fff;
+  color: var(--green-900);
+}
+
+.button-secondary:hover {
+  border-color: var(--green-900);
+}
+
+.button-small {
+  min-height: 42px;
+  padding: 0 20px;
+  font-size: 15px;
+}
+
+.button .arrow {
+  transition: transform 160ms ease;
+}
+
+.button:hover .arrow {
+  transform: translateX(3px);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
