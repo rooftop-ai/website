@@ -1,0 +1,232 @@
+---
+import Logo from "./Logo.astro";
+import { nav, site } from "../config/site";
+---
+
+<header class="site-header" data-header>
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label={`${site.name} home`}>
+      <Logo class="brand-logo" />
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="bar-actions">
+      <button class="theme-toggle" type="button" aria-label="Dark mode" aria-pressed="false" data-theme-toggle>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+      </button>
+      <a class="button button-primary button-small" href="#contact">
+        <span class="cta-long">Book an assessment</span>
+        <span class="cta-short">Contact</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  if (header) {
+    const update = () => header.toggleAttribute("data-scrolled", window.scrollY > 8);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+
+  // The inline script in Base.astro resolves the initial theme before paint.
+  const toggle = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+  if (toggle) {
+    const root = document.documentElement;
+    const sync = () => toggle.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+    sync();
+    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    toggle.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        // Storage can be unavailable (private mode); the choice then lasts for this page view.
+      }
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    background: var(--paper);
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .site-header[data-scrolled] {
+    border-bottom-color: var(--line);
+    box-shadow: 0 6px 24px -18px var(--shadow-strong);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: var(--header-h);
+  }
+
+  /* Nothing in the bar may shrink; breakpoints below keep it all fitting. */
+  .bar > * {
+    flex: none;
+  }
+
+  .bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand {
+    display: inline-flex;
+    flex: none;
+    margin-right: auto;
+  }
+
+  .brand :global(.brand-logo) {
+    width: auto;
+    height: 23px;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav a {
+    color: var(--ink-muted);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .nav a:hover {
+    color: var(--heading);
+  }
+
+  .theme-toggle {
+    display: none;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--heading);
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  /* The toggle needs JS; the head script sets data-theme, so show it only then. */
+  :global(:root[data-theme]) .theme-toggle {
+    display: grid;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--heading);
+  }
+
+  .theme-toggle svg {
+    width: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .icon-sun,
+  :global(:root[data-theme="dark"]) .icon-moon {
+    display: none;
+  }
+
+  :global(:root[data-theme="dark"]) .icon-sun {
+    display: block;
+  }
+
+  .cta-short {
+    display: none;
+  }
+
+  @media (max-width: 980px) {
+    .nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .bar {
+      gap: 16px;
+    }
+
+    .bar-actions {
+      gap: 8px;
+    }
+
+    .button-small {
+      padding: 0 16px;
+      font-size: 14px;
+    }
+
+    .cta-long {
+      display: none;
+    }
+
+    .cta-short {
+      display: inline;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .brand :global(.brand-logo) {
+      height: 19.5px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .bar {
+      gap: 10px;
+    }
+
+    .brand :global(.brand-logo) {
+      height: 16px;
+    }
+
+    .theme-toggle {
+      width: 38px;
+      height: 38px;
+    }
+
+    .button-small {
+      padding: 0 12px;
+    }
+  }
+</style>

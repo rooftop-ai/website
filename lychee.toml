@@ -1,0 +1,14 @@
+# Link checking for the built site (dist/). Run via scripts/check-links.sh,
+# which supplies the absolute root dir and remaps our own domain onto dist/.
+
+include_fragments = "full"
+index_files = ["index.html"]
+no_progress = true
+max_retries = 3
+
+exclude = [
+  # The form endpoint only accepts POST, so a GET check always returns 405.
+  '^https://formspree\.io/f/',
+  # LinkedIn answers automated requests with status 999.
+  '^https://www\.linkedin\.com/',
+]

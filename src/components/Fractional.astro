@@ -1,0 +1,211 @@
+---
+import SectionHead from "./SectionHead.astro";
+const responsibilities = [
+  {
+    title: "Strategy tied to your margins",
+    body: "A roadmap built around your numbers, not the latest trend.",
+  },
+  {
+    title: "Hands-on building, not just advice",
+    body: "We build the systems and stay until they work.",
+  },
+  {
+    title: "A data foundation you can trust",
+    body: "Clean data you can question in plain English.",
+  },
+  {
+    title: "Vendor and tool decisions",
+    body: "Know what to buy, what to build, and what to skip.",
+  },
+  {
+    title: "A team that's fluent in AI",
+    body: "Your people learn to spot and build their own wins.",
+  },
+];
+
+const comparison = [
+  { label: "Cost", fulltime: "Executive salary and equity", fractional: "A fraction of that" },
+  { label: "Time to impact", fulltime: "Months to hire", fractional: "Starts right away" },
+  { label: "Experience", fulltime: "Rare in property management", fractional: "Enterprise AI, applied to you" },
+  { label: "Flexibility", fulltime: "Fixed headcount", fractional: "Scales with your roadmap" },
+];
+---
+
+<section class="section fractional" id="fractional">
+  <div class="container">
+    <SectionHead eyebrow="The fractional model" title="What it means to hire a fractional Head of AI">
+      <p>
+        Big companies have AI teams. Most property managers don't. A fractional Head of AI gives you senior AI
+        leadership, part-time, for a fraction of the cost of a full-time executive.
+      </p>
+    </SectionHead>
+
+    <div class="layout">
+      <ul class="list">
+        {responsibilities.map((r, i) => (
+          <li>
+            <span class="num" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h3>{r.title}</h3>
+              <p>{r.body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div class="compare" role="table" aria-label="Full-time versus fractional Head of AI">
+        <div class="compare-row compare-header" role="row">
+          <span role="columnheader">
+            <span class="visually-hidden">Consideration</span>
+          </span>
+          <span role="columnheader">Full-time hire</span>
+          <span role="columnheader" class="is-us">
+            Fractional
+          </span>
+        </div>
+        {comparison.map((c) => (
+          <div class="compare-row" role="row">
+            <span role="rowheader" class="compare-label">
+              {c.label}
+            </span>
+            <span role="cell">{c.fulltime}</span>
+            <span role="cell" class="is-us">
+              {c.fractional}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fractional {
+    background: var(--paper-tint);
+    border-block: 1px solid var(--line);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(40px, 6vw, 72px);
+  }
+
+  .list {
+    display: grid;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .list li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .num {
+    color: var(--accent-text);
+    font-size: 14px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.9;
+  }
+
+  .list h3 {
+    margin-bottom: 6px;
+    font-size: 19px;
+    letter-spacing: -0.015em;
+  }
+
+  .list p {
+    color: var(--ink-muted);
+    font-size: 16px;
+  }
+
+  .compare {
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .compare-row {
+    display: grid;
+    grid-template-columns: 0.8fr 1fr 1fr;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .compare-row > span {
+    padding: 18px 20px;
+  }
+
+  .compare-row + .compare-row {
+    border-top: 1px solid var(--line);
+  }
+
+  .compare-header {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .compare-label {
+    color: var(--heading);
+    font-weight: 700;
+  }
+
+  .compare-row > span:nth-child(2) {
+    color: var(--ink-muted);
+  }
+
+  .compare-row .is-us {
+    background: var(--surface-tint);
+    color: var(--heading);
+    font-weight: 600;
+  }
+
+  .compare-header .is-us {
+    background: var(--panel);
+    color: #fff;
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+
+    .compare {
+      position: static;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .compare-row {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .compare-row > span {
+      padding: 14px 16px;
+    }
+
+    .compare-label {
+      grid-column: 1 / -1;
+      padding-bottom: 0 !important;
+    }
+
+    .compare-header > span:first-child {
+      display: none;
+    }
+  }
+</style>

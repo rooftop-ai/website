@@ -1,0 +1,71 @@
+---
+import Logo from "./Logo.astro";
+import { kern } from "../lib/typography";
+---
+
+<section class="philosophy" aria-labelledby="philosophy-title">
+  <div class="container inner">
+    <Logo variant="icon" tone="reverse" class="mark" />
+    <div class="copy">
+      <h2 id="philosophy-title">
+        <Fragment set:html={kern("You don't automate the people who hold your operation together.")} />{" "}
+        <span set:html={kern("You clear the deck for them.")} />
+      </h2>
+      <p>
+        The coordinator calming a resident in a flooded unit is irreplaceable. The forty routine tickets behind that
+        call are not. We take those off the desk.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(72px, 10vw, 120px);
+    background: var(--panel);
+    color: #fff;
+  }
+
+  .inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(28px, 5vw, 64px);
+  }
+
+  .inner :global(.mark) {
+    width: clamp(64px, 8vw, 96px);
+    height: auto;
+    margin-top: 6px;
+  }
+
+  .copy {
+    display: grid;
+    gap: 24px;
+    max-width: 880px;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: clamp(28px, 3.8vw, 44px);
+    line-height: 1.15;
+  }
+
+  h2 span {
+    color: var(--green-400);
+  }
+
+  p {
+    max-width: 720px;
+    color: rgb(255 255 255 / 0.86);
+    font-size: clamp(17px, 1.5vw, 19px);
+  }
+
+  @media (max-width: 640px) {
+    .inner {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

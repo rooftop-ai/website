@@ -1,0 +1,108 @@
+---
+import Logo from "./Logo.astro";
+import { nav, site } from "../config/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container inner">
+    <a class="brand" href="#top" aria-label={`${site.name} home`}>
+      <Logo tone="reverse" class="footer-logo" />
+    </a>
+    <nav aria-label="Footer">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+        <li>
+          <a href="#contact">Contact</a>
+        </li>
+      </ul>
+    </nav>
+    <p class="legal">
+      <span>© {year} Rooftop Labs</span>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: 36px;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--panel-deep);
+    color: rgb(255 255 255 / 0.8);
+    font-size: 14.5px;
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 40px;
+  }
+
+  .brand {
+    display: inline-flex;
+  }
+
+  .brand :global(.footer-logo) {
+    width: auto;
+    height: 17px;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .legal a {
+    white-space: nowrap;
+  }
+
+  nav a:hover,
+  .legal a:hover {
+    color: #fff;
+  }
+
+  .legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    margin-left: auto;
+  }
+
+  @media (max-width: 760px) {
+    .inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .legal {
+      flex-direction: column;
+      margin-left: 0;
+    }
+
+    .sep {
+      display: none;
+    }
+  }
+</style>

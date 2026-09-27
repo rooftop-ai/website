@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en-US",
+  "files": ["src/**/*.{astro,ts,css}", "*.md", "astro.config.mjs"],
+  "ignorePaths": ["node_modules", "dist", ".astro", "package-lock.json", "brand"],
+  "ignoreRegExpList": ["/\\bd=\"[^\"]*\"/g", "/https?:\\/\\/\\S+/g"],
+  "words": [
+    "automations",
+    "Basata",
+    "Cowork",
+    "fontsource",
+    "Formspree",
+    "inlines",
+    "lede",
+    "lightningcss",
+    "linecap",
+    "linejoin",
+    "lobehub",
+    "Lucide",
+    "Nadaa",
+    "nums",
+    "Omedix",
+    "punct",
+    "rooftoplabs",
+    "sidebearings",
+    "Taiyab",
+    "Tegria",
+    "wordmark"
+  ]
+}

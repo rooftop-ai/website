@@ -1,0 +1,134 @@
+---
+import SectionHead from "./SectionHead.astro";
+const useCases = [
+  {
+    area: "Maintenance & leasing calls",
+    title: "Voice agents that never send a caller to voicemail",
+    body: "Calls answered 24/7. Emergencies go straight to a person.",
+  },
+  {
+    area: "Work orders",
+    title: "Intake that triages itself",
+    body: "Requests get sorted and matched to a vendor. Your coordinator just approves.",
+  },
+  {
+    area: "Notices & compliance",
+    title: "Deadlines that don't get missed",
+    body: "Notices of entry, HOA notices, and renewals go out on time.",
+  },
+  {
+    area: "Accounting",
+    title: "Bills entered, anomalies flagged",
+    body: "Invoices are coded and entered. Anything unusual gets flagged.",
+  },
+  {
+    area: "Documents",
+    title: "Leases and records you can actually find",
+    body: "Leases and owner files, organized and searchable in plain English.",
+  },
+  {
+    area: "Owners & reporting",
+    title: "Answers without waiting on a report",
+    body: "Owner statements drafted for you. Ask your data anything.",
+  },
+];
+---
+
+<section class="section use-cases" id="use-cases">
+  <div class="container">
+    <SectionHead eyebrow="Where AI pays off" title="Practical AI for the work that fills your team's day">
+      <p>Your assessment decides which of these comes first.</p>
+    </SectionHead>
+
+    <ul class="grid">
+      {useCases.map((u) => (
+        <li class="item">
+          <span class="area">{u.area}</span>
+          <h3>{u.title}</h3>
+          <p>{u.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+  }
+
+  .item {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 32px 32px 36px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .item:not(:nth-child(3n + 1)) {
+    padding-left: 32px;
+    border-left: 1px solid var(--line);
+  }
+
+  .area {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent-text);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+
+  .area::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--green-400);
+    transform: rotate(45deg);
+  }
+
+  h3 {
+    font-size: 20px;
+    letter-spacing: -0.02em;
+  }
+
+  .item p {
+    color: var(--ink-muted);
+    font-size: 15.5px;
+  }
+
+  @media (max-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .item:not(:nth-child(3n + 1)) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .item:nth-child(2n) {
+      padding-left: 32px;
+      border-left: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .item,
+    .item:nth-child(2n) {
+      padding: 26px 0 28px;
+      border-left: 0;
+    }
+  }
+</style>

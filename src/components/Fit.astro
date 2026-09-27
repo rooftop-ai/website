@@ -1,0 +1,143 @@
+---
+import SectionHead from "./SectionHead.astro";
+
+const traits = [
+  {
+    title: "Motivated",
+    body: "You want to win in the AI age and will put in the time.",
+  },
+  {
+    title: "Open-minded",
+    body: "You're willing to rethink how things have always been done.",
+  },
+  {
+    title: "Driven to improve",
+    body: "Your team wants to learn and keep raising the bar.",
+  },
+];
+---
+
+<section class="section fit" id="fit">
+  <div class="container layout">
+    <div class="intro">
+      <SectionHead eyebrow="Who we work with" title="This isn't for everyone.">
+        <p>AI transformation takes commitment. The operators who succeed with us share three traits.</p>
+      </SectionHead>
+      <a class="button button-primary" href="#contact">
+        Sound like you? Let's talk{" "}
+        <span class="arrow" aria-hidden="true">
+          →
+        </span>
+      </a>
+    </div>
+
+    <div class="checklist">
+      <p class="checklist-lead" id="fit-lead">
+        Rooftop Labs is a good fit if your property management company is:
+      </p>
+      <ul class="traits" aria-labelledby="fit-lead">
+        {traits.map((t) => (
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m6 12.5 4 4 8-9" />
+            </svg>
+            <div>
+              <h3>{t.title}</h3>
+              <p>{t.body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fit {
+    background: var(--paper-tint);
+    border-block: 1px solid var(--line);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(40px, 6vw, 80px);
+  }
+
+  .intro {
+    display: grid;
+    gap: 32px;
+    justify-items: start;
+  }
+
+  .intro :global(.section-head) {
+    margin-bottom: 0;
+  }
+
+  .checklist {
+    display: grid;
+    gap: 18px;
+  }
+
+  .checklist-lead {
+    color: var(--heading);
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+
+  .traits {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .traits li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 18px;
+    padding: 24px 26px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .traits svg {
+    width: 28px;
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--solid);
+    fill: none;
+    stroke: var(--on-solid);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  h3 {
+    margin-bottom: 4px;
+    font-size: 19px;
+  }
+
+  .traits p {
+    color: var(--ink-muted);
+    font-size: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .intro .button {
+      width: 100%;
+    }
+  }
+</style>

@@ -1,43 +1,37 @@
-# Astro Starter Kit: Minimal
+# rooftoplabs.ai
+
+Marketing site for Rooftop Labs, the fractional Head of AI for property management companies. It is a single static page built with [Astro](https://astro.build).
+
+## Develop
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev          # http://localhost:4321
+npm run build        # type-checks, then builds to dist/
+npm run format       # Prettier (with the Astro plugin)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Checks and deploys
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm run spell        # cspell; add real words to cspell.json
+npm run links        # lychee on dist/ (build first); needs lychee installed
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+CI (`.github/workflows/ci.yml`) runs formatting, spelling, the type check and build, and the link check on every PR and on pushes to `main`. When everything passes on `main`, it deploys `dist/` to GitHub Pages. Dependabot opens weekly update PRs for npm packages and GitHub Actions.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Contact form
 
-Any static assets, like images, can be placed in the `public/` directory.
+Submissions go to [Formspree](https://formspree.io). The endpoint lives in `src/config/site.ts`. The form submits in the background with `Accept: application/json` and shows its own success and error states, so reCAPTCHA must stay off in the Formspree form settings. It also sends a `_subject` and a `_gotcha` honeypot field, following Formspree's conventions.
 
-## 🧞 Commands
+## Brand
 
-All commands are run from the root of the project, from a terminal:
+- **Logo**: the approved artwork lives in `brand/` (SVG, every layout and treatment). `src/components/Logo.astro` inlines the icon and a balanced horizontal lockup (see `brand/site/`) so their colors follow the theme: the color treatment in light mode, the reverse in dark mode. The favicon puts the reverse icon on a forest tile so it reads on light and dark tab bars alike. Its PNG fallbacks are rendered with Chrome, since ImageMagick drops the roof stroke.
+- **Colors**: the logo's greens (forest `#064B36`, green `#009B63`, mint `#55D99C`) are the brand primitives in `src/styles/global.css`.
+- **Light and dark themes**: components use only the semantic tokens in `src/styles/global.css`. Each token defines both theme values with `light-dark()`, and lightningcss lowers that for older browsers. The page follows the system theme. The header toggle pins a choice in `localStorage`, and an inline script in `Base.astro` applies it before first paint.
+- **Type**: Plus Jakarta Sans for headlines and UI (it matches the wordmark), and Inter for running text (legibility).
+- **Display punctuation**: Plus Jakarta Sans gives `.` and `,` wide sidebearings. Headlines go through `kern()` in `src/lib/typography.ts`, which tightens them.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Site facts
 
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Company details (name, URL, email, founder links) come from `src/config/site.ts`. Page sections are in `src/components/`, in the order listed in `src/pages/index.astro`.
