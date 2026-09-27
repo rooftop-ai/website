@@ -11,6 +11,15 @@ npm run build        # type-checks, then builds to dist/
 npm run format       # Prettier (with the Astro plugin)
 ```
 
+## Checks and deploys
+
+```sh
+npm run spell        # cspell; add real words to cspell.json
+npm run links        # lychee on dist/ (build first); needs lychee installed
+```
+
+CI (`.github/workflows/ci.yml`) runs formatting, spelling, the type check and build, and the link check on every PR and on pushes to `main`. When everything passes on `main`, it deploys `dist/` to GitHub Pages. Dependabot opens weekly update PRs for npm packages and GitHub Actions.
+
 ## Contact form
 
 Submissions go to [Formspree](https://formspree.io). The endpoint lives in `src/config/site.ts`. The form submits in the background with `Accept: application/json` and shows its own success and error states, so reCAPTCHA must stay off in the Formspree form settings. It also sends a `_subject` and a `_gotcha` honeypot field, following Formspree's conventions.
