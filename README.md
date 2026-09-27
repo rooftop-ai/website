@@ -1,43 +1,27 @@
-# Astro Starter Kit: Minimal
+# rooftoplabs.ai
+
+Marketing site for Rooftop Labs, the fractional Head of AI for property management companies. It is a single static page built with [Astro](https://astro.build).
+
+## Develop
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev          # http://localhost:4321
+npm run build        # type-checks, then builds to dist/
+npm run format       # Prettier (with the Astro plugin)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Contact form
 
-## 🚀 Project Structure
+Submissions go to [Formspree](https://formspree.io). The endpoint lives in `src/config/site.ts`. The form submits in the background with `Accept: application/json` and shows its own success and error states, so reCAPTCHA must stay off in the Formspree form settings. It also sends a `_subject` and a `_gotcha` honeypot field, following Formspree's conventions.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Brand
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- **Logo mark**: `src/components/LogoMark.astro`, recreated as SVG from the logo artwork. `public/favicon.svg` uses the same geometry. Keep them in sync.
+- **Colors**: the logo's three greens, defined as tokens in `src/styles/global.css`.
+- **Type**: Plus Jakarta Sans for headlines and UI (it matches the wordmark), and Inter for running text (legibility).
+- **Display punctuation**: Plus Jakarta Sans gives `.` and `,` wide sidebearings. Headlines go through `kern()` in `src/lib/typography.ts`, which tightens them.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Site facts
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Company details (name, URL, email, founder links) come from `src/config/site.ts`. Page sections are in `src/components/`, in the order listed in `src/pages/index.astro`.
