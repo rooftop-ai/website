@@ -1,12 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <style>
-    .ink { fill: #064b36 }
-    .roof { stroke: #009b63 }
-    @media (prefers-color-scheme: dark) {
-      .ink { fill: #ffffff }
-      .roof { stroke: #55d99c }
-    }
-  </style>
-  <path class="ink" d="M10 49 L50 20 L90 49 L90 100 L61 100 L61 77 C61 62 39 62 39 77 L39 100 L10 100 Z"/>
-  <path class="roof" d="M6 38 L50 6 L94 38" fill="none" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- The reverse logo on a forest tile reads on both light and dark tab bars. -->
+  <rect width="100" height="100" rx="22" fill="#064B36"/>
+  <g transform="translate(18 17) scale(0.64)">
+    <path d="M10 49 L50 20 L90 49 L90 100 L61 100 L61 77 C61 62 39 62 39 77 L39 100 L10 100 Z" fill="#FFFFFF"/>
+    <path d="M6 38 L50 6 L94 38" fill="none" stroke="#55D99C" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
+  </g>
 </svg>

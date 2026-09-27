@@ -26,7 +26,7 @@ Submissions go to [Formspree](https://formspree.io). The endpoint lives in `src/
 
 ## Brand
 
-- **Logo**: the approved artwork lives in `brand/` (SVG, every layout and treatment). `src/components/Logo.astro` inlines the icon and a balanced horizontal lockup (see `brand/site/`) so their colors follow the theme: the color treatment in light mode, the reverse in dark mode. `public/favicon.svg` does the same with a media query.
+- **Logo**: the approved artwork lives in `brand/` (SVG, every layout and treatment). `src/components/Logo.astro` inlines the icon and a balanced horizontal lockup (see `brand/site/`) so their colors follow the theme: the color treatment in light mode, the reverse in dark mode. The favicon puts the reverse icon on a forest tile so it reads on light and dark tab bars alike. Its PNG fallbacks are rendered with Chrome, since ImageMagick drops the roof stroke.
 - **Colors**: the logo's greens (forest `#064B36`, green `#009B63`, mint `#55D99C`) are the brand primitives in `src/styles/global.css`.
 - **Light and dark themes**: components use only the semantic tokens in `src/styles/global.css`. Each token defines both theme values with `light-dark()`, and lightningcss lowers that for older browsers. The page follows the system theme. The header toggle pins a choice in `localStorage`, and an inline script in `Base.astro` applies it before first paint.
 - **Type**: Plus Jakarta Sans for headlines and UI (it matches the wordmark), and Inter for running text (legibility).
