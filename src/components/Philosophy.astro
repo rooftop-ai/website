@@ -24,7 +24,7 @@ import { kern } from "../lib/typography";
     position: relative;
     overflow: hidden;
     padding-block: clamp(72px, 10vw, 120px);
-    background: var(--green-900);
+    background: var(--panel);
     color: #fff;
   }
 
@@ -41,8 +41,8 @@ import { kern } from "../lib/typography";
     margin-top: 6px;
   }
 
-  .inner :global(.mark path[fill]) {
-    fill: #fff;
+  .inner :global(.mark) {
+    --mark-house: #fff;
   }
 
   .copy {

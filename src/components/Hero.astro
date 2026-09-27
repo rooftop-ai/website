@@ -43,8 +43,8 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
 <section class="hero" id="top">
   <svg class="hero-bands" viewBox="0 0 1200 520" aria-hidden="true" preserveAspectRatio="xMidYMin slice">
     <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="56">
-      <path d="M-60 520 600 80l660 440" stroke="var(--green-100)"></path>
-      <path d="M-60 580 600 140l660 440" stroke="var(--green-50)"></path>
+      <path d="M-60 520 600 80l660 440" stroke="var(--band-1)"></path>
+      <path d="M-60 580 600 140l660 440" stroke="var(--band-2)"></path>
     </g>
   </svg>
 
@@ -143,7 +143,7 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
   }
 
   h1 span {
-    color: var(--green-600);
+    color: var(--accent);
   }
 
   .lede {
@@ -164,7 +164,7 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
     margin: 0;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    background: #fff;
+    background: var(--surface);
     box-shadow: var(--shadow-lift);
     overflow: hidden;
   }
@@ -181,12 +181,12 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--green-600);
-    box-shadow: 0 0 0 4px var(--green-100);
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
   }
 
   .feed-title {
-    color: var(--green-900);
+    color: var(--heading);
     font-size: 15px;
     font-weight: 700;
   }
@@ -230,14 +230,14 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: var(--green-50);
-    border: 1px solid var(--green-100);
+    background: var(--surface-tint);
+    border: 1px solid var(--surface-tint-line);
   }
 
   .feed-icon > svg {
     width: 22px;
     fill: none;
-    stroke: var(--green-900);
+    stroke: var(--icon);
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -255,7 +255,7 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
     background: #fff;
     box-shadow:
       0 0 0 1px var(--line),
-      0 2px 6px rgb(11 77 44 / 0.14);
+      0 2px 6px var(--shadow-color);
   }
 
   .feed-ai :global(svg) {
@@ -296,7 +296,7 @@ const feed: { time: string; title: string; detail: string; icon: string[]; ai: A
     justify-content: space-between;
     gap: 12px;
     padding: 16px 22px;
-    background: var(--green-900);
+    background: var(--panel);
     color: rgb(255 255 255 / 0.86);
     font-size: 14px;
     font-weight: 500;

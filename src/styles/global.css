@@ -2,25 +2,57 @@
 @import "@fontsource-variable/inter";
 
 :root {
-  color-scheme: light;
+  /*
+   * Follow the system theme by default. The header toggle pins a theme by
+   * setting data-theme on <html>; light-dark() below picks the value that
+   * matches the active color-scheme.
+   */
+  color-scheme: light dark;
 
-  /* Brand greens, sampled from the logo. */
+  /* Brand greens, sampled from the logo. Fixed in both themes. */
+  --green-950: #062a18;
   --green-900: #0b4d2c;
   --green-800: #0a3f25;
-  --green-950: #062a18;
   --green-600: #00904b;
   --green-400: #5bc682;
   --green-100: #dff3e6;
   --green-50: #f1f9f4;
 
-  --ink: #10261a;
-  --ink-muted: #2c3f35;
-  --ink-soft: #5b6f64;
-  --paper: #ffffff;
-  --paper-tint: #f6faf7;
-  --line: #dde9e1;
-  --line-strong: #c6d8cc;
-  --danger: #b42318;
+  /* Surfaces */
+  --paper: light-dark(#ffffff, #08120d);
+  --paper-tint: light-dark(#f6faf7, #0c1a13);
+  --surface: light-dark(#ffffff, #10211a);
+  --surface-tint: light-dark(var(--green-50), #143024);
+  --surface-tint-line: light-dark(var(--green-100), #1e4431);
+  --accent-soft: light-dark(var(--green-100), #173a28);
+  --line: light-dark(#dde9e1, #1d3228);
+  --line-strong: light-dark(#c6d8cc, #2e4a3c);
+  --header-bg: light-dark(rgb(255 255 255 / 0.92), rgb(8 18 13 / 0.92));
+
+  /* Brand panels keep the deep green in both themes, with white text on top. */
+  --panel: light-dark(var(--green-900), #0b3b23);
+  --panel-deep: light-dark(var(--green-950), #04160c);
+
+  /* Text */
+  --ink: light-dark(#10261a, #e4eee8);
+  --ink-muted: light-dark(#2c3f35, #b3c4ba);
+  --ink-soft: light-dark(#5b6f64, #879a8f);
+  --heading: light-dark(var(--green-900), #eef7f1);
+  --accent: light-dark(var(--green-600), var(--green-400));
+  --accent-text: light-dark(#007a3d, #6fd293);
+  --icon: light-dark(var(--green-900), #a5dfba);
+  --danger: light-dark(#b42318, #ff8a7d);
+
+  /* Solid fills: primary buttons, selected chips, check marks. */
+  --solid: light-dark(var(--green-900), var(--green-400));
+  --solid-hover: light-dark(var(--green-800), #74d396);
+  --on-solid: light-dark(#ffffff, #05200f);
+
+  /* The logo's house body turns light so it stays visible on dark backgrounds. */
+  --mark-house: light-dark(var(--green-900), #eef7f1);
+
+  --band-1: light-dark(var(--green-100), rgb(91 198 130 / 0.09));
+  --band-2: light-dark(var(--green-50), rgb(91 198 130 / 0.045));
 
   /* Display face matches the logo wordmark; Inter carries running text for legibility. */
   --font-display: "Plus Jakarta Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -29,13 +61,24 @@
   --radius-sm: 10px;
   --radius: 16px;
   --radius-lg: 24px;
-  --shadow-card: 0 1px 2px rgb(11 77 44 / 0.06), 0 8px 24px -8px rgb(11 77 44 / 0.12);
-  --shadow-lift: 0 2px 4px rgb(11 77 44 / 0.06), 0 24px 48px -16px rgb(11 77 44 / 0.22);
+  --shadow-tint: light-dark(rgb(11 77 44 / 0.06), rgb(0 0 0 / 0.3));
+  --shadow-color: light-dark(rgb(11 77 44 / 0.12), rgb(0 0 0 / 0.45));
+  --shadow-strong: light-dark(rgb(11 77 44 / 0.22), rgb(0 0 0 / 0.6));
+  --shadow-card: 0 1px 2px var(--shadow-tint), 0 8px 24px -8px var(--shadow-color);
+  --shadow-lift: 0 2px 4px var(--shadow-tint), 0 24px 48px -16px var(--shadow-strong);
 
   --container: 1160px;
   --gutter: clamp(20px, 5vw, 40px);
   --section-y: clamp(80px, 11vw, 136px);
   --header-h: 72px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 *,
@@ -67,7 +110,7 @@ h2,
 h3,
 h4 {
   margin: 0;
-  color: var(--green-900);
+  color: var(--heading);
   font-family: var(--font-display);
   font-weight: 800;
   line-height: 1.12;
@@ -97,8 +140,8 @@ svg {
 }
 
 ::selection {
-  background: var(--green-100);
-  color: var(--green-950);
+  background: var(--accent-soft);
+  color: var(--heading);
 }
 
 .container {
@@ -113,7 +156,7 @@ svg {
 }
 
 .eyebrow {
-  color: var(--green-600);
+  color: var(--accent-text);
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: 700;
@@ -170,24 +213,24 @@ svg {
 }
 
 .button-primary {
-  background: var(--green-900);
-  color: #fff;
-  box-shadow: 0 6px 18px -6px rgb(11 77 44 / 0.55);
+  background: var(--solid);
+  color: var(--on-solid);
+  box-shadow: 0 6px 18px -6px var(--shadow-strong);
 }
 
 .button-primary:hover {
-  background: var(--green-800);
+  background: var(--solid-hover);
   transform: translateY(-1px);
 }
 
 .button-secondary {
   border-color: var(--line-strong);
-  background: #fff;
-  color: var(--green-900);
+  background: var(--surface);
+  color: var(--heading);
 }
 
 .button-secondary:hover {
-  border-color: var(--green-900);
+  border-color: var(--heading);
 }
 
 .button-small {

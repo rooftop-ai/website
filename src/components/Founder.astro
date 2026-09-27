@@ -139,7 +139,7 @@ const education = [
     position: absolute;
     inset: 18px -18px -18px 18px;
     border-radius: var(--radius-lg);
-    background: var(--green-100);
+    background: var(--accent-soft);
   }
 
   .portrait :global(img) {
@@ -195,7 +195,7 @@ const education = [
 
   .role {
     margin-top: -6px;
-    color: var(--green-600);
+    color: var(--accent-text);
     font-size: 18px;
     font-weight: 700;
   }
@@ -227,11 +227,11 @@ const education = [
     align-content: start;
     gap: 4px;
     padding: 20px 22px;
-    background: #fff;
+    background: var(--surface);
   }
 
   .highlights strong {
-    color: var(--green-900);
+    color: var(--heading);
     font-size: 24px;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -247,7 +247,7 @@ const education = [
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    color: var(--green-900);
+    color: var(--heading);
     font-size: 16px;
     font-weight: 700;
     text-decoration: underline;
@@ -257,12 +257,12 @@ const education = [
   }
 
   .linkedin:hover {
-    text-decoration-color: var(--green-900);
+    text-decoration-color: var(--heading);
   }
 
   .linkedin svg {
     width: 20px;
-    fill: #0a66c2;
+    fill: light-dark(#0a66c2, #70b5f9);
   }
 
   @media (max-width: 900px) {
