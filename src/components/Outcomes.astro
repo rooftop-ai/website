@@ -1,0 +1,123 @@
+---
+import SectionHead from "./SectionHead.astro";
+const outcomes = [
+  {
+    title: "Lower your cost to operate",
+    body: "Automate the busywork. Move your people to higher-value work.",
+    icon: "M4 17 9 12l4 4 7-8M15 8h5v5",
+  },
+  {
+    title: "Nothing slips through the cracks",
+    body: "Notices go out on time. Calls never land in voicemail.",
+    icon: "M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Zm-3.5 9 2.5 2.5 5-5",
+  },
+  {
+    title: "Compete on service and speed",
+    body: "Respond faster and win business from slower competitors.",
+    icon: "M13 3 5 14h6l-1 7 8-11h-6l1-7Z",
+  },
+  {
+    title: "The confidence to grow",
+    body: "Add doors or acquire companies without adding overhead.",
+    icon: "M3 11 12 4l9 7M6 9.5V20h12V9.5M10 20v-5h4v5",
+  },
+];
+---
+
+<section class="section outcomes" id="outcomes">
+  <div class="container">
+    <SectionHead
+      eyebrow="Why it matters"
+      title="Five hours here. Eight hours there. It adds up to a different company."
+    >
+      <p>AI isn't one tool. It's a new way to run your operation, and the hours you win back compound.</p>
+    </SectionHead>
+
+    <ul class="grid">
+      {outcomes.map((o) => (
+        <li class="card">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d={o.icon} />
+            </svg>
+          </span>
+          <h3>{o.title}</h3>
+          <p>{o.body}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card {
+    display: grid;
+    align-content: start;
+    gap: 14px;
+    padding: 28px 26px 30px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: #fff;
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease,
+      transform 200ms ease;
+  }
+
+  .card:hover {
+    border-color: var(--line-strong);
+    box-shadow: var(--shadow-card);
+    transform: translateY(-2px);
+  }
+
+  .icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 6px;
+    border-radius: 14px;
+    background: var(--green-50);
+  }
+
+  .icon svg {
+    width: 24px;
+    fill: none;
+    stroke: var(--green-900);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  h3 {
+    font-size: 19px;
+    letter-spacing: -0.015em;
+  }
+
+  .card p {
+    color: var(--ink-muted);
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1080px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
