@@ -1,0 +1,541 @@
+---
+import { site } from "../config/site";
+import { kern } from "../lib/typography";
+
+const doorOptions = ["Under 250", "250 - 999", "1,000 - 4,999", "5,000+"];
+
+const nextSteps = [
+  "We reply to set up a short intro call.",
+  "We learn where your team's time goes.",
+  "If it's a fit, we scope your assessment.",
+];
+---
+
+<section class="section contact" id="contact">
+  <div class="container layout">
+    <div class="intro">
+      <p class="eyebrow">Contact us</p>
+      <h2 set:html={kern("Let's find the hours hiding in your operation.")} />
+      <p class="lede">Tell us about your company and we'll set up a conversation.</p>
+      <ol class="next">
+        {nextSteps.map((s) => (
+          <li>{s}</li>
+        ))}
+      </ol>
+      <p class="direct">
+        Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+
+    <div class="panel">
+      <form
+        class="form"
+        action={site.contactFormEndpoint}
+        method="POST"
+        novalidate
+        data-contact-form
+        data-endpoint={site.contactFormEndpoint}
+      >
+        <input type="hidden" name="_subject" value="New inquiry from rooftoplabs.ai" />
+        <div class="honeypot" aria-hidden="true">
+          <label>
+            Leave this field empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-error" />
+            <p class="error" id="name-error" data-error-for="name"></p>
+          </div>
+          <div class="field">
+            <label for="email">Work email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error" />
+            <p class="error" id="email-error" data-error-for="email"></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="company">Company</label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              autocomplete="organization"
+              required
+              aria-describedby="company-error"
+            />
+            <p class="error" id="company-error" data-error-for="company"></p>
+          </div>
+          <div class="field">
+            <label for="phone">
+              Phone <span class="optional">Optional</span>
+            </label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>Doors under management</legend>
+          <div class="chips">
+            {doorOptions.map((option) => (
+              <label class="chip">
+                <input type="radio" name="doors" value={option} />
+                <span>{option}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="message">
+            What would you most like to improve? <span class="optional">Optional</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="e.g. Our maintenance coordinators spend hours on vendor follow-ups."
+          ></textarea>
+        </div>
+
+        <button class="button button-primary submit" type="submit">
+          <span class="submit-label">Send message</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+
+        <p class="status" role="alert" data-status></p>
+      </form>
+
+      <div class="success" data-success hidden tabindex="-1">
+        <span class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="m6 12.5 4 4 8-9"></path>
+          </svg>
+        </span>
+        <h3>Thanks - we'll be in touch soon.</h3>
+        <p>Your message is on its way. Keep an eye on your inbox for a reply from Rooftop Labs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
+  const success = document.querySelector<HTMLElement>("[data-success]");
+  const status = form?.querySelector<HTMLElement>("[data-status]");
+  const contactEmail = document.querySelector<HTMLAnchorElement>(".direct a")?.textContent ?? "";
+
+  const messages: Record<string, (input: HTMLInputElement) => string> = {
+    name: () => "Please enter your name.",
+    email: (input) =>
+      input.validity.valueMissing ? "Please enter your email." : "Please enter a valid email address.",
+    company: () => "Please enter your company name.",
+  };
+
+  function showError(input: HTMLInputElement, message: string) {
+    const error = form?.querySelector<HTMLElement>(`[data-error-for="${input.name}"]`);
+    input.setAttribute("aria-invalid", message ? "true" : "false");
+    if (error) error.textContent = message;
+  }
+
+  function validate(input: HTMLInputElement) {
+    const message = messages[input.name];
+    if (!message) return true;
+    const valid = input.checkValidity();
+    showError(input, valid ? "" : message(input));
+    return valid;
+  }
+
+  if (form && success && status) {
+    const required = [...form.querySelectorAll<HTMLInputElement>("input[required]")];
+
+    for (const input of required) {
+      input.addEventListener("blur", () => {
+        if (input.value) validate(input);
+      });
+      input.addEventListener("input", () => {
+        if (input.getAttribute("aria-invalid") === "true") validate(input);
+      });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "";
+
+      const invalid = required.filter((input) => !validate(input));
+      if (invalid.length > 0) {
+        invalid[0].focus();
+        return;
+      }
+
+      const endpoint = form.dataset.endpoint!;
+
+      form.setAttribute("aria-busy", "true");
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+      } catch {
+        status.textContent = `Something went wrong sending your message. Please try again, or email us at ${contactEmail}.`;
+      } finally {
+        form.removeAttribute("aria-busy");
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact {
+    background: radial-gradient(1000px 500px at 0% 0%, rgb(91 198 130 / 0.18), transparent 60%), var(--green-900);
+    color: #fff;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+    gap: clamp(40px, 6vw, 88px);
+  }
+
+  .intro {
+    display: grid;
+    gap: 20px;
+    padding-top: 8px;
+  }
+
+  .intro .eyebrow {
+    color: var(--green-400);
+  }
+
+  .intro h2 {
+    color: #fff;
+    font-size: clamp(34px, 4.4vw, 50px);
+  }
+
+  .lede {
+    color: rgb(255 255 255 / 0.88);
+    font-size: 18px;
+  }
+
+  .next {
+    display: grid;
+    gap: 14px;
+    margin: 12px 0 4px;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .next li {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    color: rgb(255 255 255 / 0.88);
+    font-size: 16px;
+    line-height: 1.55;
+    counter-increment: step;
+  }
+
+  .next li::before {
+    content: counter(step);
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid rgb(91 198 130 / 0.6);
+    border-radius: 50%;
+    color: var(--green-400);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .direct {
+    color: rgb(255 255 255 / 0.8);
+    font-size: 15.5px;
+  }
+
+  .direct a {
+    color: #fff;
+    font-weight: 700;
+    text-decoration-color: var(--green-400);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .panel {
+    padding: clamp(24px, 4vw, 40px);
+    border-radius: var(--radius-lg);
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.45);
+  }
+
+  .form {
+    display: grid;
+    gap: 20px;
+  }
+
+  .form[hidden] {
+    display: none;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .field {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  label,
+  legend {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0;
+    color: var(--green-900);
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+
+  legend {
+    margin-bottom: 8px;
+  }
+
+  .optional {
+    flex: none;
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;
+    transition:
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  textarea {
+    min-height: 116px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  ::placeholder {
+    color: var(--ink-soft);
+    opacity: 0.8;
+  }
+
+  input:hover,
+  textarea:hover {
+    border-color: var(--ink-soft);
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: var(--green-600);
+    outline: none;
+    box-shadow: 0 0 0 4px rgb(91 198 130 / 0.25);
+  }
+
+  input[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  input[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 4px rgb(180 35 24 / 0.15);
+  }
+
+  .error {
+    color: var(--danger);
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .error:empty {
+    display: none;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    display: block;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1.5px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--ink-muted);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .chip:hover span {
+    border-color: var(--ink-soft);
+  }
+
+  .chip input:checked + span {
+    border-color: var(--green-900);
+    background: var(--green-900);
+    color: #fff;
+  }
+
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--green-400);
+    outline-offset: 2px;
+  }
+
+  .submit {
+    position: relative;
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgb(255 255 255 / 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 700ms linear infinite;
+  }
+
+  .form[aria-busy="true"] .submit {
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  .form[aria-busy="true"] .spinner {
+    display: inline-block;
+  }
+
+  .status {
+    color: var(--danger);
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+
+  .status:empty {
+    display: none;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .success {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    padding: 48px 12px;
+    text-align: center;
+    outline: none;
+  }
+
+  .success[hidden] {
+    display: none;
+  }
+
+  .success-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+  }
+
+  .success-icon svg {
+    width: 32px;
+    fill: none;
+    stroke: var(--green-600);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .success h3 {
+    font-size: 24px;
+  }
+
+  .success p {
+    max-width: 380px;
+    color: var(--ink-muted);
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 960px) {
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
