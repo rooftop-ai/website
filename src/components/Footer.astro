@@ -24,7 +24,15 @@ const year = new Date().getFullYear();
       </ul>
     </nav>
     <p class="legal">
-      © {year} Rooftop Labs · <a href={`mailto:${site.email}`}>{site.email}</a>
+      <span>© {year} Rooftop Labs</span>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a>
+      <span class="sep" aria-hidden="true">
+        ·
+      </span>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
     </p>
   </div>
 </footer>
@@ -79,12 +87,19 @@ const year = new Date().getFullYear();
     text-decoration: none;
   }
 
+  .legal a {
+    white-space: nowrap;
+  }
+
   nav a:hover,
   .legal a:hover {
     color: #fff;
   }
 
   .legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
     margin-left: auto;
   }
 
@@ -95,7 +110,12 @@ const year = new Date().getFullYear();
     }
 
     .legal {
+      flex-direction: column;
       margin-left: 0;
+    }
+
+    .sep {
+      display: none;
     }
   }
 </style>

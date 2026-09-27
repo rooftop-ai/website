@@ -22,6 +22,7 @@ const structuredData = {
       logo: new URL("/favicon.svg", site.url).href,
       description: site.description,
       email: site.email,
+      telephone: site.phone.e164,
       areaServed: "US",
       founder: { "@id": `${site.url}/#founder` },
     },

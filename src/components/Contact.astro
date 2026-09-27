@@ -23,7 +23,8 @@ const nextSteps = [
         ))}
       </ol>
       <p class="direct">
-        Prefer email? <a href={`mailto:${site.email}`}>{site.email}</a>
+        Prefer to talk? Call <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a> or email{" "}
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
     </div>
 
@@ -35,6 +36,7 @@ const nextSteps = [
         novalidate
         data-contact-form
         data-endpoint={site.contactFormEndpoint}
+        data-fallback={`call ${site.phone.display} or email ${site.email}`}
       >
         <input type="hidden" name="_subject" value="New inquiry from rooftoplabs.ai" />
         <div class="honeypot" aria-hidden="true">
@@ -126,7 +128,6 @@ const nextSteps = [
   const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const success = document.querySelector<HTMLElement>("[data-success]");
   const status = form?.querySelector<HTMLElement>("[data-status]");
-  const contactEmail = document.querySelector<HTMLAnchorElement>(".direct a")?.textContent ?? "";
 
   const messages: Record<string, (input: HTMLInputElement) => string> = {
     name: () => "Please enter your name.",
@@ -185,7 +186,7 @@ const nextSteps = [
         success.hidden = false;
         success.focus();
       } catch {
-        status.textContent = `Something went wrong sending your message. Please try again, or email us at ${contactEmail}.`;
+        status.textContent = `Something went wrong sending your message. Please try again, or ${form.dataset.fallback}.`;
       } finally {
         form.removeAttribute("aria-busy");
       }
@@ -266,6 +267,7 @@ const nextSteps = [
 
   .direct a {
     color: #fff;
+    white-space: nowrap;
     font-weight: 700;
     text-decoration-color: var(--green-400);
     text-decoration-thickness: 2px;
