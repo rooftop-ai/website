@@ -45,8 +45,34 @@ const structuredData = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#0b4d2c" />
-
+    <meta name="theme-color" content="#ffffff" />
+    <script is:inline>
+      // Resolve the theme before first paint: a stored choice wins, otherwise follow the system.
+      (() => {
+        const root = document.documentElement;
+        const media = matchMedia("(prefers-color-scheme: dark)");
+        const stored = () => {
+          try {
+            const value = localStorage.getItem("theme");
+            return value === "light" || value === "dark" ? value : null;
+          } catch {
+            return null;
+          }
+        };
+        const themeColor = document.querySelector('meta[name="theme-color"]');
+        const apply = () => {
+          root.dataset.theme = stored() ?? (media.matches ? "dark" : "light");
+        };
+        // Keep the browser chrome in step with the page, including after the header toggle.
+        new MutationObserver(() => {
+          themeColor?.setAttribute("content", root.dataset.theme === "dark" ? "#08120d" : "#ffffff");
+        }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+        apply();
+        media.addEventListener("change", () => {
+          if (!stored()) apply();
+        });
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

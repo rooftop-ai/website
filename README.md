@@ -19,6 +19,7 @@ Submissions go to [Formspree](https://formspree.io). The endpoint lives in `src/
 
 - **Logo mark**: `src/components/LogoMark.astro`, recreated as SVG from the logo artwork. `public/favicon.svg` uses the same geometry. Keep them in sync.
 - **Colors**: the logo's three greens, defined as tokens in `src/styles/global.css`.
+- **Light and dark themes**: components use only the semantic tokens in `src/styles/global.css`. Each token defines both theme values with `light-dark()`, and lightningcss lowers that for older browsers. The page follows the system theme. The header toggle pins a choice in `localStorage`, and an inline script in `Base.astro` applies it before first paint.
 - **Type**: Plus Jakarta Sans for headlines and UI (it matches the wordmark), and Inter for running text (legibility).
 - **Display punctuation**: Plus Jakarta Sans gives `.` and `,` wide sidebearings. Headlines go through `kern()` in `src/lib/typography.ts`, which tightens them.
 
