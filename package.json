@@ -12,7 +12,9 @@
     "check": "astro check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "astro": "astro"
+    "astro": "astro",
+    "spell": "cspell --no-progress .",
+    "links": "scripts/check-links.sh"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "cspell": "^10.3.5",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "^6.0.3"
