@@ -1,0 +1,129 @@
+---
+import LogoMark from "./LogoMark.astro";
+import { nav, site } from "../config/site";
+---
+
+<header class="site-header" data-header>
+  <div class="container bar">
+    <a class="brand" href="#top" aria-label={`${site.name} home`}>
+      <LogoMark class="brand-mark" />
+      <span class="brand-name">Rooftop Labs</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <a class="button button-primary button-small" href="#contact">
+      Book an assessment
+    </a>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  if (header) {
+    const update = () => header.toggleAttribute("data-scrolled", window.scrollY > 8);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    background: rgb(255 255 255 / 0.88);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .site-header[data-scrolled] {
+    border-bottom-color: var(--line);
+    box-shadow: 0 6px 24px -18px rgb(11 77 44 / 0.4);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    margin-right: auto;
+    text-decoration: none;
+  }
+
+  .brand :global(.brand-mark) {
+    width: 32px;
+    height: auto;
+  }
+
+  .brand-name {
+    color: var(--green-900);
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav a {
+    color: var(--ink-muted);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .nav a:hover {
+    color: var(--green-900);
+  }
+
+  @media (max-width: 900px) {
+    .nav {
+      display: none;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .bar {
+      gap: 12px;
+    }
+
+    .brand :global(.brand-mark) {
+      width: 28px;
+    }
+
+    .brand-name {
+      font-size: 19px;
+    }
+
+    .button-small {
+      padding: 0 16px;
+      font-size: 14px;
+    }
+  }
+</style>

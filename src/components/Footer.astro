@@ -1,0 +1,101 @@
+---
+import LogoMark from "./LogoMark.astro";
+import { nav, site } from "../config/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container inner">
+    <a class="brand" href="#top" aria-label={`${site.name} home`}>
+      <LogoMark class="mark" />
+      <span>Rooftop Labs</span>
+    </a>
+    <nav aria-label="Footer">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+        <li>
+          <a href="#contact">Contact</a>
+        </li>
+      </ul>
+    </nav>
+    <p class="legal">
+      © {year} Rooftop Labs · <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: 36px;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    background: var(--green-950);
+    color: rgb(255 255 255 / 0.8);
+    font-size: 14.5px;
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 40px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+
+  .brand :global(.mark) {
+    width: 24px;
+    height: auto;
+  }
+
+  .brand :global(.mark path[fill]) {
+    fill: #fff;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  nav a:hover,
+  .legal a:hover {
+    color: #fff;
+  }
+
+  .legal {
+    margin-left: auto;
+  }
+
+  @media (max-width: 760px) {
+    .inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .legal {
+      margin-left: 0;
+    }
+  }
+</style>

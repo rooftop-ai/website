@@ -1,0 +1,21 @@
+---
+import { kern } from "../lib/typography";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  class?: string;
+}
+
+const { eyebrow, title, class: className } = Astro.props;
+---
+
+<div class:list={["section-head", className]}>
+  <p class="eyebrow">{eyebrow}</p>
+  <h2 set:html={kern(title)} />
+  {Astro.slots.has("default") && (
+    <div class="section-lede">
+      <slot />
+    </div>
+  )}
+</div>
