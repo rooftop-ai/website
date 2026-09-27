@@ -27,7 +27,6 @@
   --accent-soft: light-dark(var(--green-100), #173a28);
   --line: light-dark(#dde9e1, #1d3228);
   --line-strong: light-dark(#c6d8cc, #2e4a3c);
-  --header-bg: light-dark(rgb(255 255 255 / 0.92), rgb(8 18 13 / 0.92));
 
   /* Brand panels keep the deep green in both themes, with white text on top. */
   --panel: light-dark(var(--green-900), #073a2b);
