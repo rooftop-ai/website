@@ -157,7 +157,7 @@ jobs:
           body="$marker
           **Preview:** $preview
 
-          Updated for ${HEAD_SHA:0:7}. This exact build is also at $DEPLOY_URL"
+          Updated for ${HEAD_SHA:0:7}. The preview is removed when this PR is merged or closed."
           existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
             --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
           if [ -n "$existing" ]; then
