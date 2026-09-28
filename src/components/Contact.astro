@@ -22,8 +22,14 @@ const nextSteps = [
           <li>{s}</li>
         ))}
       </ol>
+      <a class="button button-primary book" href={site.booking} target="_blank" rel="noopener">
+        Book a call with Nadaa{" "}
+        <span class="arrow" aria-hidden="true">
+          →
+        </span>
+      </a>
       <p class="direct">
-        Prefer to talk? Call <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a> or email{" "}
+        Prefer to talk now? Call <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a> or email{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
     </div>
@@ -258,6 +264,10 @@ const nextSteps = [
     color: var(--green-400);
     font-size: 13px;
     font-weight: 800;
+  }
+
+  .book {
+    justify-self: start;
   }
 
   .direct {
