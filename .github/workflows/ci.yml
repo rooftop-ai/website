@@ -21,9 +21,11 @@ jobs:
     env:
       LYCHEE_VERSION: 0.24.2
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -55,9 +57,17 @@ jobs:
 
       - name: Upload site for GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
+
+      - name: Upload site for the PR preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: site
+          path: dist
+          retention-days: 3
 
   deploy:
     name: Deploy to GitHub Pages
@@ -75,4 +85,105 @@ jobs:
       cancel-in-progress: false
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  preview:
+    name: Deploy PR preview
+    needs: check
+    # Secrets aren't available to Dependabot or fork PRs, so skip those cleanly.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.alias || steps.deploy.outputs.url }}
+    env:
+      PREVIEW_PROJECT: rooftoplabs-previews
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      # wrangler (and everything it depends on) is pinned in this lockfile and
+      # installed without lifecycle scripts, so no unreviewed code runs with the token.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/preview-deployer
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: .github/preview-deployer/package-lock.json
+
+      - name: Install wrangler
+        working-directory: .github/preview-deployer
+        run: npm ci --ignore-scripts
+
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: site
+          path: dist
+
+      - name: Ensure the Cloudflare Pages project exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects"
+          auth="Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+          status=$(curl -sS -o /dev/null -w '%{http_code}' -H "$auth" "$api/$PREVIEW_PROJECT")
+          case "$status" in
+            200) echo "Project $PREVIEW_PROJECT exists." ;;
+            404)
+              echo "Creating project $PREVIEW_PROJECT."
+              curl -sS --fail-with-body -X POST -H "$auth" -H "Content-Type: application/json" \
+                --data "{\"name\":\"$PREVIEW_PROJECT\",\"production_branch\":\"main\"}" "$api" >/dev/null
+              ;;
+            *) echo "Unexpected status $status looking up $PREVIEW_PROJECT; check the API token and account ID." >&2; exit 1 ;;
+          esac
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        working-directory: .github/preview-deployer
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WRANGLER_OUTPUT_FILE_PATH: ${{ runner.temp }}/wrangler-output.json
+        run: |
+          ./node_modules/.bin/wrangler pages deploy "$GITHUB_WORKSPACE/dist" \
+            --project-name="$PREVIEW_PROJECT" \
+            --branch="pr-$PR_NUMBER" \
+            --commit-hash="$HEAD_SHA" \
+            --commit-dirty=true
+          record=$(jq -c 'select(.type == "pages-deploy-detailed")' "$WRANGLER_OUTPUT_FILE_PATH" | tail -n 1)
+          echo "url=$(jq -r '.url // empty' <<<"$record")" >> "$GITHUB_OUTPUT"
+          echo "alias=$(jq -r '.alias // empty' <<<"$record")" >> "$GITHUB_OUTPUT"
+
+      - name: Post the preview link on the PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALIAS_URL: ${{ steps.deploy.outputs.alias }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          preview="${ALIAS_URL:-$DEPLOY_URL}"
+          if [ -z "$preview" ]; then
+            echo "Cloudflare returned no preview URL." >&2
+            exit 1
+          fi
+          marker="<!-- rooftop-labs-preview -->"
+          body="$marker
+          **Preview:** $preview
+
+          Updated for ${HEAD_SHA:0:7}. The preview is removed when this PR is merged or closed."
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" -f body="$body" >/dev/null
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" -f body="$body" >/dev/null
+          fi

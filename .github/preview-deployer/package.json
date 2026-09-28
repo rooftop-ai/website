@@ -1,0 +1,8 @@
+{
+  "name": "preview-deployer",
+  "private": true,
+  "description": "Pinned wrangler for the PR preview job; installed with npm ci --ignore-scripts.",
+  "dependencies": {
+    "wrangler": "4.142.0"
+  }
+}

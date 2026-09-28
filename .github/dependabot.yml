@@ -7,6 +7,10 @@ updates:
     groups:
       npm:
         patterns: ["*"]
+  - package-ecosystem: npm
+    directory: /.github/preview-deployer
+    schedule:
+      interval: weekly
   - package-ecosystem: github-actions
     directory: /
     schedule:
