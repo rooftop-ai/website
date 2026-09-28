@@ -75,7 +75,8 @@ const nextSteps = [
             <label for="phone">
               Phone <span class="optional">Optional</span>
             </label>
-            <input id="phone" name="phone" type="tel" autocomplete="tel" />
+            <input id="phone" name="phone" type="tel" autocomplete="tel" aria-describedby="phone-error" />
+            <p class="error" id="phone-error" data-error-for="phone"></p>
           </div>
         </div>
 
@@ -125,6 +126,8 @@ const nextSteps = [
 </section>
 
 <script>
+  import { formatPhone, isCompletePhone } from "../lib/phone";
+
   const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const success = document.querySelector<HTMLElement>("[data-success]");
   const status = form?.querySelector<HTMLElement>("[data-status]");
@@ -134,6 +137,7 @@ const nextSteps = [
     email: (input) =>
       input.validity.valueMissing ? "Please enter your email." : "Please enter a valid email address.",
     company: () => "Please enter your company name.",
+    phone: () => "Please enter a complete phone number.",
   };
 
   function showError(input: HTMLInputElement, message: string) {
@@ -145,15 +149,64 @@ const nextSteps = [
   function validate(input: HTMLInputElement) {
     const message = messages[input.name];
     if (!message) return true;
+    if (input.type === "tel") input.setCustomValidity(isCompletePhone(input.value) ? "" : "incomplete");
     const valid = input.checkValidity();
     showError(input, valid ? "" : message(input));
     return valid;
   }
 
-  if (form && success && status) {
-    const required = [...form.querySelectorAll<HTMLInputElement>("input[required]")];
+  const digitsIn = (value: string) => value.replace(/\D/g, "");
 
-    for (const input of required) {
+  // Reformats the phone field in place, keeping the caret after the same digit.
+  function formatPhoneField(input: HTMLInputElement, event: InputEvent, previous: string) {
+    let value = input.value;
+    let caret = input.selectionStart ?? value.length;
+
+    // Deleting a `(`, `)`, space, or `-` would just be re-added, so delete the
+    // digit beside it instead.
+    const deleting = event.inputType === "deleteContentBackward" || event.inputType === "deleteContentForward";
+    if (deleting && digitsIn(value) === digitsIn(previous)) {
+      const backward = event.inputType === "deleteContentBackward";
+      const digitsBefore = digitsIn(value.slice(0, caret)).length;
+      const target = backward ? digitsBefore - 1 : digitsBefore;
+      let seen = -1;
+      for (let i = 0; i < value.length; i++) {
+        if (/\d/.test(value[i]) && ++seen === target) {
+          value = value.slice(0, i) + value.slice(i + 1);
+          if (backward) caret = i;
+          break;
+        }
+      }
+    }
+
+    const digitsBeforeCaret = digitsIn(value.slice(0, caret)).length;
+    const formatted = formatPhone(value);
+    if (formatted === input.value) return;
+
+    input.value = formatted;
+    let position = digitsBeforeCaret === 0 ? 0 : formatted.length;
+    for (let i = 0, seen = 0; i < formatted.length && digitsBeforeCaret > 0; i++) {
+      if (/\d/.test(formatted[i]) && ++seen === digitsBeforeCaret) {
+        position = i + 1;
+        break;
+      }
+    }
+    input.setSelectionRange(position, position);
+  }
+
+  if (form && success && status) {
+    const phone = form.querySelector<HTMLInputElement>("input[type=tel]");
+    const validated = [...form.querySelectorAll<HTMLInputElement>("input[required]"), ...(phone ? [phone] : [])];
+
+    if (phone) {
+      let previous = phone.value;
+      phone.addEventListener("input", (event) => {
+        formatPhoneField(phone, event as InputEvent, previous);
+        previous = phone.value;
+      });
+    }
+
+    for (const input of validated) {
       input.addEventListener("blur", () => {
         if (input.value) validate(input);
       });
@@ -166,7 +219,7 @@ const nextSteps = [
       event.preventDefault();
       status.textContent = "";
 
-      const invalid = required.filter((input) => !validate(input));
+      const invalid = validated.filter((input) => !validate(input));
       if (invalid.length > 0) {
         invalid[0].focus();
         return;
