@@ -18,7 +18,7 @@ npm run spell        # cspell; add real words to cspell.json
 npm run links        # lychee on dist/ (build first); needs lychee installed
 ```
 
-CI (`.github/workflows/ci.yml`) runs formatting, spelling, the type check and build, and the link check on every PR and on pushes to `main`. When everything passes on `main`, it deploys `dist/` to GitHub Pages. On pull requests from this repo, it also deploys the build to Cloudflare Pages (project `rooftoplabs-previews`) and comments the preview link on the PR. That job needs the `CLOUDFLARE_API_TOKEN` (Cloudflare Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID` repo secrets. Previews are served with `noindex`, so they stay out of search results. Dependabot opens weekly update PRs for npm packages and GitHub Actions.
+CI (`.github/workflows/ci.yml`) runs formatting, spelling, the type check and build, and the link check on every PR and on pushes to `main`. When everything passes on `main`, it deploys `dist/` to GitHub Pages. On pull requests from this repo, it also deploys the build to Cloudflare Pages (project `rooftoplabs-previews`) and comments the preview link on the PR. That job needs the `CLOUDFLARE_API_TOKEN` (Cloudflare Pages: Edit) and `CLOUDFLARE_ACCOUNT_ID` repo secrets. When the PR is merged or closed, `.github/workflows/preview-cleanup.yml` deletes that PR's preview deployments and updates the comment. Dependabot opens weekly update PRs for npm packages and GitHub Actions.
 
 ## Contact form
 

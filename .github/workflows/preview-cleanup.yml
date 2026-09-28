@@ -1,0 +1,77 @@
+name: Preview cleanup
+
+# Tear down a PR's Cloudflare Pages preview once the PR is merged or closed.
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Remove PR preview
+    # Previews only exist for same-repo, non-Dependabot PRs (see ci.yml).
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+    env:
+      PREVIEW_PROJECT: rooftoplabs-previews
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - name: Delete the preview's Cloudflare deployments
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          api="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/pages/projects/${PREVIEW_PROJECT}/deployments"
+          auth="Authorization: Bearer ${CLOUDFLARE_API_TOKEN}"
+          branch="pr-${PR_NUMBER}"
+
+          # Collect every deployment on this PR's branch first; deleting while
+          # paging would shift the pages under us.
+          ids=""
+          page=1
+          while :; do
+            resp=$(curl -sS --fail-with-body -H "$auth" "$api?env=preview&per_page=25&page=$page")
+            ids="$ids $(jq -r --arg b "$branch" '.result[] | select(.deployment_trigger.metadata.branch == $b) | .id' <<<"$resp")"
+            total=$(jq -r '.result_info.total_pages // 1' <<<"$resp")
+            [ "$page" -ge "$total" ] && break
+            page=$((page + 1))
+          done
+
+          count=0
+          for id in $ids; do
+            # force=true also removes the deployment that holds the pr-N alias.
+            curl -sS --fail-with-body -X DELETE -H "$auth" "$api/$id?force=true" >/dev/null
+            count=$((count + 1))
+          done
+          echo "Deleted $count deployment(s) for $branch."
+
+      - name: Mark the GitHub preview deployments inactive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=preview&ref=$HEAD_REF" --paginate --jq '.[].id'); do
+            gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" -f state=inactive >/dev/null
+          done
+
+      - name: Update the preview comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MERGED: ${{ github.event.pull_request.merged }}
+        run: |
+          marker="<!-- rooftop-labs-preview -->"
+          existing=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)
+          [ -z "$existing" ] && exit 0
+          if [ "$MERGED" = "true" ]; then outcome="merged"; else outcome="closed"; fi
+          body="$marker
+          **Preview removed** because this PR was $outcome."
+          gh api -X PATCH "repos/$GITHUB_REPOSITORY/issues/comments/$existing" -f body="$body" >/dev/null
