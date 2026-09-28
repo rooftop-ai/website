@@ -58,7 +58,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for id in $(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=preview&ref=$HEAD_REF" --paginate --jq '.[].id'); do
+          # -f with GET sends properly encoded query parameters, whatever the branch name.
+          for id in $(gh api -X GET "repos/$GITHUB_REPOSITORY/deployments" -f environment=preview -f ref="$HEAD_REF" --paginate --jq '.[].id'); do
             gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses" -f state=inactive >/dev/null
           done
 
