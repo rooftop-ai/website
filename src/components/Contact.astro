@@ -4,8 +4,10 @@ import { kern } from "../lib/typography";
 
 const doorOptions = ["Under 250", "250 - 999", "1,000 - 4,999", "5,000+"];
 
+const bookingEmbed = `${site.booking}?embed_type=Inline&embed_domain=${new URL(site.url).hostname}&hide_gdpr_banner=1`;
+
 const nextSteps = [
-  "We reply to set up a short intro call.",
+  "Book a 25-minute intro call, or send a note and we'll set one up.",
   "We learn where your team's time goes.",
   "If it's a fit, we scope your assessment.",
 ];
@@ -16,121 +18,172 @@ const nextSteps = [
     <div class="intro">
       <p class="eyebrow">Contact us</p>
       <h2 set:html={kern("Let's find the hours hiding in your operation.")} />
-      <p class="lede">Tell us about your company and we'll set up a conversation.</p>
+      <p class="lede">Pick a time that works for you, or tell us about your company and we'll reach out.</p>
       <ol class="next">
         {nextSteps.map((s) => (
           <li>{s}</li>
         ))}
       </ol>
-      <a class="button button-primary book" href={site.booking} target="_blank" rel="noopener">
-        Book a call with Nadaa{" "}
-        <span class="arrow" aria-hidden="true">
-          →
-        </span>
-      </a>
       <p class="direct">
-        Prefer to talk now? Call <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a> or email{" "}
+        Prefer to talk? Call <a href={`tel:${site.phone.e164}`}>{site.phone.display}</a> or email{" "}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
     </div>
 
     <div class="panel">
-      <form
-        class="form"
-        action={site.contactFormEndpoint}
-        method="POST"
-        novalidate
-        data-contact-form
-        data-endpoint={site.contactFormEndpoint}
-        data-fallback={`call ${site.phone.display} or email ${site.email}`}
-      >
-        <input type="hidden" name="_subject" value="New inquiry from rooftoplabs.ai" />
-        <div class="honeypot" aria-hidden="true">
-          <label>
-            Leave this field empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
-          </label>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="name">Name</label>
-            <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-error" />
-            <p class="error" id="name-error" data-error-for="name"></p>
-          </div>
-          <div class="field">
-            <label for="email">Work email</label>
-            <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error" />
-            <p class="error" id="email-error" data-error-for="email"></p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field">
-            <label for="company">Company</label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              autocomplete="organization"
-              required
-              aria-describedby="company-error"
-            />
-            <p class="error" id="company-error" data-error-for="company"></p>
-          </div>
-          <div class="field">
-            <label for="phone">
-              Phone <span class="optional">Optional</span>
-            </label>
-            <input id="phone" name="phone" type="tel" autocomplete="tel" />
-          </div>
-        </div>
-
-        <fieldset class="field">
-          <legend>Doors under management</legend>
-          <div class="chips">
-            {doorOptions.map((option) => (
-              <label class="chip">
-                <input type="radio" name="doors" value={option} />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <div class="field">
-          <label for="message">
-            What would you most like to improve? <span class="optional">Optional</span>
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows="4"
-            placeholder="e.g. Our maintenance coordinators spend hours on vendor follow-ups."
-          ></textarea>
-        </div>
-
-        <button class="button button-primary submit" type="submit">
-          <span class="submit-label">Send message</span>
-          <span class="spinner" aria-hidden="true"></span>
+      <div class="tabs" role="tablist" aria-label="How to reach us">
+        <button class="tab" type="button" role="tab" id="tab-book" aria-controls="tabpanel-book" aria-selected="true">
+          Book a call
         </button>
+        <button
+          class="tab"
+          type="button"
+          role="tab"
+          id="tab-message"
+          aria-controls="tabpanel-message"
+          aria-selected="false"
+          tabindex="-1"
+        >
+          Send a message
+        </button>
+      </div>
 
-        <p class="status" role="alert" data-status></p>
-      </form>
+      <div class="tabpanel" id="tabpanel-book" role="tabpanel" aria-labelledby="tab-book">
+        <iframe
+          class="calendly"
+          src={bookingEmbed}
+          title={`Book a 25-minute call with ${site.founder.name}`}
+          loading="lazy"
+        ></iframe>
+      </div>
 
-      <div class="success" data-success hidden tabindex="-1">
-        <span class="success-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="m6 12.5 4 4 8-9"></path>
-          </svg>
-        </span>
-        <h3>Thanks - we'll be in touch soon.</h3>
-        <p>Your message is on its way. Keep an eye on your inbox for a reply from Rooftop Labs.</p>
+      <div class="tabpanel" id="tabpanel-message" role="tabpanel" aria-labelledby="tab-message" hidden>
+        <form
+          class="form"
+          action={site.contactFormEndpoint}
+          method="POST"
+          novalidate
+          data-contact-form
+          data-endpoint={site.contactFormEndpoint}
+          data-fallback={`call ${site.phone.display} or email ${site.email}`}
+        >
+          <input type="hidden" name="_subject" value="New inquiry from rooftoplabs.ai" />
+          <div class="honeypot" aria-hidden="true">
+            <label>
+              Leave this field empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </label>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="name">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-error" />
+              <p class="error" id="name-error" data-error-for="name"></p>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                aria-describedby="email-error"
+              />
+              <p class="error" id="email-error" data-error-for="email"></p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="company">Company</label>
+              <input
+                id="company"
+                name="company"
+                type="text"
+                autocomplete="organization"
+                required
+                aria-describedby="company-error"
+              />
+              <p class="error" id="company-error" data-error-for="company"></p>
+            </div>
+            <div class="field">
+              <label for="phone">
+                Phone <span class="optional">Optional</span>
+              </label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" />
+            </div>
+          </div>
+
+          <fieldset class="field">
+            <legend>Doors under management</legend>
+            <div class="chips">
+              {doorOptions.map((option) => (
+                <label class="chip">
+                  <input type="radio" name="doors" value={option} />
+                  <span>{option}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="message">
+              What would you most like to improve? <span class="optional">Optional</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows="4"
+              placeholder="e.g. Our maintenance coordinators spend hours on vendor follow-ups."
+            ></textarea>
+          </div>
+
+          <button class="button button-primary submit" type="submit">
+            <span class="submit-label">Send message</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+
+          <p class="status" role="alert" data-status></p>
+        </form>
+
+        <div class="success" data-success hidden tabindex="-1">
+          <span class="success-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="m6 12.5 4 4 8-9"></path>
+            </svg>
+          </span>
+          <h3>Thanks - we'll be in touch soon.</h3>
+          <p>Your message is on its way. Keep an eye on your inbox for a reply from Rooftop Labs.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <script>
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>(".contact [role='tab']")];
+
+  function selectTab(tab: HTMLButtonElement) {
+    for (const t of tabs) {
+      const selected = t === tab;
+      t.setAttribute("aria-selected", String(selected));
+      t.tabIndex = selected ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")!)!.hidden = !selected;
+    }
+  }
+
+  for (const [i, tab] of tabs.entries()) {
+    tab.addEventListener("click", () => selectTab(tab));
+    tab.addEventListener("keydown", (event) => {
+      const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+      if (!step) return;
+      const next = tabs[(i + step + tabs.length) % tabs.length];
+      selectTab(next);
+      next.focus();
+    });
+  }
+
   const form = document.querySelector<HTMLFormElement>("[data-contact-form]");
   const success = document.querySelector<HTMLElement>("[data-success]");
   const status = form?.querySelector<HTMLElement>("[data-status]");
@@ -266,10 +319,6 @@ const nextSteps = [
     font-weight: 800;
   }
 
-  .book {
-    justify-self: start;
-  }
-
   .direct {
     color: rgb(255 255 255 / 0.8);
     font-size: 15.5px;
@@ -290,6 +339,60 @@ const nextSteps = [
     background: var(--surface);
     color: var(--ink);
     box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.45);
+  }
+
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin-bottom: 24px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--surface-tint);
+    border: 1px solid var(--surface-tint-line);
+  }
+
+  .tab {
+    min-height: 44px;
+    padding: 0 12px;
+    white-space: nowrap;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .tab:hover {
+    color: var(--heading);
+  }
+
+  .tab[aria-selected="true"] {
+    background: var(--solid);
+    color: var(--on-solid);
+  }
+
+  .tab:focus-visible {
+    outline: 3px solid var(--green-400);
+    outline-offset: 2px;
+  }
+
+  .tabpanel[hidden] {
+    display: none;
+  }
+
+  .calendly {
+    display: block;
+    width: 100%;
+    height: 700px;
+    border: 0;
+    border-radius: 12px;
   }
 
   .form {
@@ -548,6 +651,10 @@ const nextSteps = [
   @media (max-width: 560px) {
     .row {
       grid-template-columns: 1fr;
+    }
+
+    .tab {
+      font-size: 14px;
     }
   }
 </style>
